@@ -67,8 +67,8 @@ tag-release:
     RUN mkdir -p -m 0700 ~/.ssh && ssh-keyscan github.com >> ~/.ssh/known_hosts
     COPY --dir .git/ .
     RUN --ssh git checkout -q main && git fetch && git tag $(svu next)
-    RUN --push --ssh git push --tags
     SAVE ARTIFACT .git/refs/tags AS LOCAL .git/refs/tags
+    RUN --push --ssh git push --tags
 
 release:
     FROM +tools
