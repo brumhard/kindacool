@@ -8,7 +8,8 @@
 
 ## Usage
 
-### Installation
+<details>
+  <summary><h3>Installation</h3></summary>
 
 #### From source
 
@@ -34,6 +35,8 @@ OCI images are also available. They contain only the binary `kindacool`, so ther
 ```shell
 docker run -it --rm ghcr.io/brumhard/kindacool --help
 ```
+
+</details>
 
 ### Preconditions
 
@@ -107,9 +110,9 @@ Run `earthly bootstrap` to make sure everything is ready.
 
 The most important earthly targets are:
 
-- Run all linters and tests: `earthly +lint`
-- Generate docs: `earthly +generate`
-- Trigger a new release: `earthly +tag-release`
+* Run all linters and tests: `earthly +lint`
+* Generate docs: `earthly +generate`
+* Trigger a new release: `earthly +tag-release`
 
 If any of the targets do not work as expected add the `-i` flag to run in interactive mode and spawn a shell into the container that is running the step.
 
