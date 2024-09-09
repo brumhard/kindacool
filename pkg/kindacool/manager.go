@@ -9,14 +9,13 @@ import (
 	"os/exec"
 
 	"github.com/brumhard/kindacool/pkg/k3s"
-
 	"github.com/gophercloud/gophercloud/openstack"
+
 	"github.com/pulumi/pulumi/pkg/v3/backend/httpstate"
+	pkgWorkspace "github.com/pulumi/pulumi/pkg/v3/workspace"
 	"github.com/pulumi/pulumi/sdk/v3/go/auto"
 	"github.com/pulumi/pulumi/sdk/v3/go/auto/optdestroy"
 	"github.com/pulumi/pulumi/sdk/v3/go/auto/optup"
-	"github.com/pulumi/pulumi/sdk/v3/go/common/diag"
-	"github.com/pulumi/pulumi/sdk/v3/go/common/diag/colors"
 	"github.com/pulumi/pulumi/sdk/v3/go/common/tokens"
 	"github.com/pulumi/pulumi/sdk/v3/go/common/workspace"
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
@@ -46,18 +45,18 @@ func EnsureEnvironment(ctx context.Context) error {
 		return ErrPulumiNotInPath
 	}
 
-	_, err := openstack.AuthOptionsFromEnv()
-	if err != nil {
-		return fmt.Errorf("%w: %v", ErrUnauthorized, err)
-	}
-
-	_, err = httpstate.NewLoginManager().Current(
+	_, err := httpstate.NewLoginManager().Current(
 		ctx,
-		diag.DefaultSink(io.Discard, io.Discard, diag.FormatOptions{Color: colors.Never}),
-		httpstate.DefaultURL(),
+		httpstate.DefaultURL(pkgWorkspace.Instance),
+		false, false,
 	)
 	if err != nil {
 		return err
+	}
+
+	_, err = openstack.AuthOptionsFromEnv()
+	if err != nil {
+		return fmt.Errorf("%w: %v", ErrUnauthorized, err)
 	}
 
 	return nil

@@ -6,16 +6,21 @@
     utils.url = "github:numtide/flake-utils";
   };
 
-  outputs = { self, nixpkgs, utils }:
-    utils.lib.eachDefaultSystem (system:
-      let
-        pkgs = import nixpkgs { inherit system; };
-      in
-      {
+  outputs = {
+    self,
+    nixpkgs,
+    utils,
+  }:
+    utils.lib.eachDefaultSystem (
+      system: let
+        pkgs = import nixpkgs {inherit system;};
+      in {
         devShell = pkgs.mkShell {
           packages = with pkgs; [
-            go_1_19
-            pulumi-bin
+            go_1_22
+            (pkgs.writeShellScriptBin "pulumi" ''
+              exec ${pkgs.pulumi-bin}/bin/pulumi "$@"
+            '')
             earthly
           ];
 
